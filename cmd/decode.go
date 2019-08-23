@@ -89,6 +89,7 @@ var decodeCmd = &cobra.Command{
 var (
 	decodeAsID *bool
 	json       *bool
+	pp         *bool
 )
 
 func init() {
@@ -106,4 +107,5 @@ func init() {
 
 	decodeAsID = decodeCmd.Flags().Bool("id", false, "decode input as an JPQR ID")
 	json = decodeCmd.Flags().Bool("json", false, "format as a JSON text")
+	pp = decodeCmd.Flags().Bool("pp", true, "format with k0kubun/pp")
 }
