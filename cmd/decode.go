@@ -22,7 +22,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/k0kubun/pp"
+	"github.com/ktr0731/emvutil/format"
 	"github.com/spf13/cobra"
 	"go.mercari.io/go-emv-code/mpm"
 	"go.mercari.io/go-emv-code/mpm/jpqr"
@@ -41,6 +41,15 @@ var decodeCmd = &cobra.Command{
 		} else {
 			in = os.Stdin
 		}
+
+		var fmter format.Formatter
+		switch {
+		case *json:
+			fmter = format.NewJSON(os.Stdout)
+		default:
+			fmter = format.NewPP(os.Stdout)
+		}
+
 		var hasErr bool
 		s := bufio.NewScanner(in)
 		for s.Scan() {
@@ -60,7 +69,7 @@ var decodeCmd = &cobra.Command{
 					hasErr = true
 					continue
 				}
-				pp.Println(id)
+				fmter.Format(id)
 			} else {
 				code, err := jpqr.Decode(s.Bytes())
 				if err != nil {
@@ -68,7 +77,7 @@ var decodeCmd = &cobra.Command{
 					hasErr = true
 					continue
 				}
-				pp.Println(code)
+				fmter.Format(code)
 			}
 		}
 		if hasErr {
@@ -79,6 +88,7 @@ var decodeCmd = &cobra.Command{
 
 var (
 	decodeAsID *bool
+	json       *bool
 )
 
 func init() {
@@ -95,4 +105,5 @@ func init() {
 	// decodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	decodeAsID = decodeCmd.Flags().Bool("id", false, "decode input as an JPQR ID")
+	json = decodeCmd.Flags().Bool("json", false, "format as a JSON text")
 }
