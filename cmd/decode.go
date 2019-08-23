@@ -32,7 +32,7 @@ import (
 // decodeCmd represents the decode command
 var decodeCmd = &cobra.Command{
 	Use:   "decode",
-	Short: "decode input as a JPQR payload",
+	Short: "decode input as a EMVCo payload",
 	Long:  "",
 	Run: func(cmd *cobra.Command, args []string) {
 		var in io.Reader
@@ -53,7 +53,7 @@ var decodeCmd = &cobra.Command{
 		var hasErr bool
 		s := bufio.NewScanner(in)
 		for s.Scan() {
-			if *decodeAsID {
+			if *decodeAsJPQRID {
 				code := &mpm.Code{
 					MerchantAccountInformation: []tlv.TLV{
 						{
@@ -71,7 +71,7 @@ var decodeCmd = &cobra.Command{
 				}
 				fmter.Format(id)
 			} else {
-				code, err := jpqr.Decode(s.Bytes())
+				code, err := mpm.Decode(s.Bytes())
 				if err != nil {
 					fmt.Fprintf(os.Stderr, "failed to decode payload '%s'", s.Text())
 					hasErr = true
@@ -87,9 +87,9 @@ var decodeCmd = &cobra.Command{
 }
 
 var (
-	decodeAsID *bool
-	json       *bool
-	pp         *bool
+	decodeAsJPQRID *bool
+	json           *bool
+	pp             *bool
 )
 
 func init() {
@@ -105,7 +105,7 @@ func init() {
 	// is called directly, e.g.:
 	// decodeCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	decodeAsID = decodeCmd.Flags().Bool("id", false, "decode input as an JPQR ID")
+	decodeAsJPQRID = decodeCmd.Flags().Bool("jpqr-id", false, "decode input as an JPQR ID")
 	json = decodeCmd.Flags().Bool("json", false, "format as a JSON text")
 	pp = decodeCmd.Flags().Bool("pp", true, "format with k0kubun/pp")
 }
