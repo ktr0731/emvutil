@@ -65,7 +65,7 @@ var decodeCmd = &cobra.Command{
 				}
 				id, err := jpqr.ParseID(code)
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "failed to decode id '%s'", s.Text())
+					fmt.Fprintf(os.Stderr, "failed to decode id '%s': %s", s.Text(), err)
 					hasErr = true
 					continue
 				}
@@ -73,7 +73,7 @@ var decodeCmd = &cobra.Command{
 			} else {
 				code, err := mpm.Decode(s.Bytes())
 				if err != nil {
-					fmt.Fprintf(os.Stderr, "failed to decode payload '%s'", s.Text())
+					fmt.Fprintf(os.Stderr, "failed to decode payload '%s': %s", s.Text(), err)
 					hasErr = true
 					continue
 				}
