@@ -9,6 +9,5 @@ require (
 	github.com/morikuni/failure v0.11.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/viper v1.4.0
-	go.mercari.io/go-emv-code v0.1.2
-	golang.org/x/sys v0.0.0-20190412213103-97732733099d // indirect
+	go.mercari.io/go-emv-code v0.1.3
 )
