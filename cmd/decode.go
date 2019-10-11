@@ -23,6 +23,7 @@ import (
 	"strings"
 
 	"github.com/ktr0731/emvutil/format"
+	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
 	"go.mercari.io/go-emv-code/mpm"
 	"go.mercari.io/go-emv-code/mpm/jpqr"
@@ -47,7 +48,10 @@ var decodeCmd = &cobra.Command{
 		case *json:
 			fmter = format.NewJSON(os.Stdout)
 		default:
-			fmter = format.NewPP(os.Stdout)
+			fmter = format.NewPP(
+				os.Stdout,
+				isatty.IsTerminal(os.Stdout.Fd()) || isatty.IsCygwinTerminal(os.Stdout.Fd()),
+			)
 		}
 
 		var hasErr bool
